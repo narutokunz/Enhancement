@@ -62,6 +62,13 @@ GALLERY_DIR   = PIPELINE_ROOT / "Reference_Gallery"
 GALLERY_FILE  = PIPELINE_ROOT / "models" / "reference_embeddings.npz"
 MATCH_THRESHOLD = 0.5
 
+# =====================================================================================
+#  DEFAULT TEST PATHS (Change these anytime, or leave None to use command-line arguments)
+# =====================================================================================
+DEFAULT_INPUT_FOLDER = r"C:\Users\SSD\Desktop\TESTING\DBForMatching"
+DEFAULT_REFERENCE    = r"C:\Users\SSD\Desktop\TESTING\ss1.png"
+# =====================================================================================
+
 
 def _build_gallery():
     """Build the reference gallery from Reference_Gallery/ folder."""
@@ -404,6 +411,14 @@ def main():
         return
 
     if not args.input_image:
+        if DEFAULT_INPUT_FOLDER and Path(DEFAULT_INPUT_FOLDER).exists():
+            print(f"Using default input path: {DEFAULT_INPUT_FOLDER}")
+            ref = args.reference or (DEFAULT_REFERENCE if DEFAULT_REFERENCE and Path(DEFAULT_REFERENCE).exists() else None)
+            if ref:
+                print(f"Using reference: {ref}")
+            run_on_input(DEFAULT_INPUT_FOLDER, ref, args.skip_codeformer)
+            return
+
         parser.print_help()
         print("\nExamples:")
         print("  python run_pipeline.py crowd_photo.jpg --reference known_face.jpg")
